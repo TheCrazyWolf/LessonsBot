@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="VkNet" Version="1.72.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LessonsBot_ApiSgk\LessonsBot_ApiSgk.csproj" />
+    <ProjectReference Include="..\LessonsBot_DB\LessonsBot_DB.csproj" />
+    <ProjectReference Include="..\LessonsBot_Logger\LessonsBot_Logger.csproj" />
+  </ItemGroup>
+
+</Project>
