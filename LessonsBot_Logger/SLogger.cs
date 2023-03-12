@@ -1,8 +1,12 @@
 ﻿
+using System.Threading;
+
 public class SLogger
 {
     public static bool Debug = true;
     public static bool SaveLogs = true;
+
+    protected static string filename = $"{DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss")}.txt";
 
     public static void Write(object data)
     {
@@ -10,14 +14,16 @@ public class SLogger
         if (!Debug)
             return;
 
+        DateTime timeset = DateTime.Now;
+
         Console.ForegroundColor = ConsoleColor.White;
-        Console.WriteLine($"[{DateTime.Now}] > {data}");
+        Console.WriteLine($"[{timeset}] > {data}");
         Console.ForegroundColor = ConsoleColor.White;
 
         if (!SaveLogs)
             return;
 
-        LoggToFile(data);
+        LoggToFile(timeset, data);
 
     }
 
@@ -27,14 +33,16 @@ public class SLogger
         if (!Debug)
             return;
 
+        DateTime timeset = DateTime.Now;
+
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine($"[{DateTime.Now}] > {data}");
+        Console.WriteLine($"[{timeset}] > {data}");
         Console.ForegroundColor = ConsoleColor.White;
 
         if (!SaveLogs)
             return;
 
-        LoggToFile(data);
+        LoggToFile(timeset, data);
 
     }
 
@@ -44,19 +52,31 @@ public class SLogger
         if (!Debug)
             return;
 
+        DateTime timeset = DateTime.Now;
+
         Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine($"[{DateTime.Now}] > {data}");
+        Console.WriteLine($"[{timeset}] > {data}");
         Console.ForegroundColor = ConsoleColor.White;
 
         if (!SaveLogs)
             return;
 
-        LoggToFile(data);
+        LoggToFile(timeset, data);
 
     }
 
-    public static void LoggToFile(object data)
+    public static void LoggToFile(DateTime timeset, object data)
     {
-        //if(File.)
+       
+        Directory.CreateDirectory("logcat");
+
+        if (!File.Exists($"{Environment.CurrentDirectory}\\logcat\\" + filename))
+            File.WriteAllText($"logcat\\" + filename, "");
+
+        var logcat = File.ReadAllText($"{Environment.CurrentDirectory}\\logcat\\" + filename);
+
+        logcat += $"\n[{timeset}] {data}";
+
+        File.WriteAllText($"{Environment.CurrentDirectory}\\logcat\\" + filename, logcat);
     }
 }

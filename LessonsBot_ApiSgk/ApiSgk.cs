@@ -6,14 +6,14 @@ using System.Text.Json;
 public class ApiSgk
 {
     public static ApiLessons GetLessons(TypeLesson type, 
-        DateOnly date, string id)
+        DateTime date, string id)
     {
         string json = "";
 
         switch (type)
         {
             case TypeLesson.Group:
-                json = Response($"https://asu.samgk.ru/api/schedule/{id}/{date.ToString("yyyy - MM - dd")}");
+                json = Response($"https://asu.samgk.ru/api/schedule/{id}/{date.ToString("yyyy-MM-dd")}");
                 break;
             case TypeLesson.Teacher:
                 json = Response($"https://asu.samgk.ru/api/schedule/teacher/{date.ToString("yyyy-MM-dd")}/{id}");
