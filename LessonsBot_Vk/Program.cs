@@ -9,10 +9,10 @@ internal class Program
     static DbProvider _ef;
     private static void Main(string[] args)
     {
-        _ef = new DbProvider();
-
         CacheMigrator.Migrate();
 
+        _ef = new DbProvider();
+        
         SLogger.Write($"Всего подключенных ботов: {_ef.Bots.Count()}");
 
         foreach (var item in _ef.Bots.Include(x=> x.PeerProps))

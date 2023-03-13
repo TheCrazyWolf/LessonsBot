@@ -6,8 +6,8 @@ public class DbProvider : DbContext
 {
     public DbSet<Bot> Bots { get; set; }
     public DbSet<PeerProp> PeerProps { get; set; }
-    public DbSet<ApiGroupsCache> GroupsCache { get; set; }
-    public DbSet<ApiTeacherCache> TeacherCaches { get; set; }
+    public DbSet<ApiGroups> GroupsCache { get; set; }
+    public DbSet<ApiTeacher> TeacherCaches { get; set; }
 
     private string _path = "data.db";
 

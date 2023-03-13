@@ -14,10 +14,4 @@ namespace LessonsBot_DB.ModelService
         public int Id { get; set; }
         public string Name { get; set; }
     }
-
-    [Serializable]
-    public class ApiGroupsCache : ApiGroups
-    {
-
-    }
 }

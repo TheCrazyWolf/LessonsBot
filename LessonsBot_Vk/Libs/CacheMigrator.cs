@@ -29,7 +29,7 @@ namespace LessonsBot_Vk.Libs
                         continue;
 
                     SLogger.Write($"Обработка: #{item.Id} {item.Name}");
-                    _ef.Add( new ApiGroupsCache() { Id = item.Id, Name = item.Name });
+                    _ef.Add( new ApiGroups() { Id = item.Id, Name = item.Name });
                     _ef.SaveChanges();
                 }
 
@@ -42,7 +42,7 @@ namespace LessonsBot_Vk.Libs
                         continue;
 
                     SLogger.Write($"Обработка: #{item.id} {item.name}");
-                    _ef.Add(new ApiTeacherCache() { id = item.id, name = item.name });
+                    _ef.Add(new ApiTeacher() { id = item.id, name = item.name });
                     _ef.SaveChanges();
                 }
             }

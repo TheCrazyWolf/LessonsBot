@@ -11,9 +11,4 @@ namespace LessonsBot_DB.ModelService
         public string name { get; set; }
     }
 
-    [Serializable]
-    public class ApiTeacherCache : ApiTeacher
-    {
-
-    }
 }
