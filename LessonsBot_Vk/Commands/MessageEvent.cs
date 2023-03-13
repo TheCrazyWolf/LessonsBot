@@ -1,5 +1,6 @@
 ﻿using LessonsBot_DB.ModelsDb;
 using LessonsBot_DB.ModelService;
+using LessonsBot_Vk.ExpDataset;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,17 +13,19 @@ using VkNet.Model.GroupUpdate;
 
 namespace LessonsBot_Vk.Commands
 {
-    internal class SystemCommand
+    internal class MessageEvent
     {
-        VkApi _api;
-        Bot _bot;
-        Message _message;
-        DbProvider _db;
-        string[] msg_array;
+        protected VkApi _api;
+        protected Bot _bot;
+        protected Message _message;
+        protected DbProvider _db;
 
-        public SystemCommand(IGroupUpdate item, ref VkApi vkApi, ref Bot bot)
+        protected string[] msg_array;
+        protected string msg;
+
+        public MessageEvent(IGroupUpdate item, ref VkApi vkApi, ref Bot bot)
         {
-            _message = (Message) item;
+            _message = (Message)item;
             _api = vkApi;
             _db = new DbProvider();
             _bot = bot;
@@ -34,8 +37,9 @@ namespace LessonsBot_Vk.Commands
             SLogger.Write($"Содержимое: {_message.Text}");
 
 
-            msg_array = new Regex("\\[.*\\][\\s,]*").Replace(_message.Text.ToLower(), "").Split(" ");
-
+            msg_array = new Regex(@"\[.*\][\s,]*").Replace(_message.Text.ToLower(), "").Split(" ");
+            
+            msg = new Regex(@"^.*\s+\!\w*\s+").Replace(_message.Text.ToLower(), "");
 
             switch (msg_array[0].ToLower())
             {
@@ -54,6 +58,7 @@ namespace LessonsBot_Vk.Commands
                     UnBind();
                     break;
                 default:
+                    _api.Messages.Send(new() { PeerId = _message.PeerId, Message = new TrainBot().ExpGetAnswer(msg), RandomId = new Random().Next() });
                     break;
             }
 
@@ -79,12 +84,12 @@ namespace LessonsBot_Vk.Commands
             }
 
             var find_teachers = _db.TeacherCaches.ToList()
-                .FirstOrDefault(x => x.id == msg_array[1] || x.name.ToLower() == msg_array[1].ToLower());
+                .FirstOrDefault(x => x.id == msg|| x.name.ToLower() == msg.ToLower());
 
             var find_groupropa = _db.GroupsCache.ToList()
-                .FirstOrDefault(x => x.Id.ToString() == msg_array[1] || x.Name.ToLower() == msg_array[1].ToLower());
+                .FirstOrDefault(x => x.Id.ToString() == msg || x.Name.ToLower() == msg.ToLower());
 
-            if (find_groupropa == null)
+            if (find_groupropa == null && find_teachers == null)
             {
                 _api.Messages.Send(new() { Message = "Не удалось получить список преподов/групп", 
                     PeerId = _message.PeerId, RandomId = new Random().Next() });
@@ -123,7 +128,11 @@ namespace LessonsBot_Vk.Commands
         }
         private string Help()
         {
-            return $"Меню в разработке";
+            return $"Версия: как оно работает? " +
+                $"\nОсновные команды" +
+                $"\n!привязать (запрос) - привязать беседу" +
+                $"\n!отвязать - очистить беседу от привязок" +
+                $"\n!расписание (запрос) (дата) (пока не работает)";
         }
 
     }

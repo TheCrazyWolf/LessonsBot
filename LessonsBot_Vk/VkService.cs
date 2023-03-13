@@ -89,15 +89,8 @@ namespace LessonsBot_Vk
 
                     foreach (var item in poll?.Updates)
                     {
-                        if (item.Message.Text[0] == '!')
-                        {
-                            new SystemCommand(item.Instance, ref _vkApi, ref _bot);
-                            NotifyVkServicesProps?.Invoke();
-                        }
-                        else
-                        {
-
-                        }
+                        new MessageEvent(item.Instance, ref _vkApi, ref _bot);
+                        NotifyVkServicesProps?.Invoke();
                     }
 
                     

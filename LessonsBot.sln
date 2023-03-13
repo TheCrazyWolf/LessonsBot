@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LessonsBot_DB", "LessonsBot_DB\LessonsBot_DB.csproj", "{5E82EF51-18C3-426E-8B7C-C55C74102ED6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LessonsBot_DB", "LessonsBot_DB\LessonsBot_DB.csproj", "{5E82EF51-18C3-426E-8B7C-C55C74102ED6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LessonsBot_Logger", "LessonsBot_Logger\LessonsBot_Logger.csproj", "{A11E7644-D00F-4F76-A288-BE40B54A9979}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LessonsBot_Logger", "LessonsBot_Logger\LessonsBot_Logger.csproj", "{A11E7644-D00F-4F76-A288-BE40B54A9979}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LessonsBot_ApiSgk", "LessonsBot_ApiSgk\LessonsBot_ApiSgk.csproj", "{4C0B3586-5A96-48C4-9C3F-B630EB11C466}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LessonsBot_ApiSgk", "LessonsBot_ApiSgk\LessonsBot_ApiSgk.csproj", "{4C0B3586-5A96-48C4-9C3F-B630EB11C466}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LessonsBot_Vk", "LessonsBot_Vk\LessonsBot_Vk.csproj", "{A33ED599-2769-4682-B969-D21CA5ADCE06}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LessonsBot_Vk", "LessonsBot_Vk\LessonsBot_Vk.csproj", "{A33ED599-2769-4682-B969-D21CA5ADCE06}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

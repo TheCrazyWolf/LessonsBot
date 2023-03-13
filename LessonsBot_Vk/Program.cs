@@ -1,5 +1,6 @@
 ﻿using LessonsBot_DB.ModelsDb;
 using LessonsBot_Vk;
+using LessonsBot_Vk.ExpDataset;
 using LessonsBot_Vk.Libs;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +12,9 @@ internal class Program
     private static void Main(string[] args)
     {
         BootOn();
+
+        //new TrainBot().Start();
+
         SLogger.Write($"Всего подключенных ботов: {_totalCount}");
 
         /* Запуск ботов в потоке*/

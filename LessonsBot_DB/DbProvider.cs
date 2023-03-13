@@ -9,6 +9,8 @@ public class DbProvider : DbContext
     public DbSet<ApiGroups> GroupsCache { get; set; }
     public DbSet<ApiTeacher> TeacherCaches { get; set; }
 
+    public DbSet<Dicktionary> Dicktionaries { get; set; }
+
     private string _path = "data.db";
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
