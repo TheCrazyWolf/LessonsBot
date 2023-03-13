@@ -58,7 +58,8 @@ namespace LessonsBot_Vk.Commands
         {
             if (_bot.PeerProps.Count >= 5)
             {
-                _api.Messages.Send(new() { Message = "Дружок, уже перебор... На эту беседу привязано больше 5 настроек!", 
+                _api.Messages.Send(new() { Message = "Дружок, уже перебор... " +
+                    "На эту беседу привязано больше 5 настроек!", 
                     PeerId = _message.PeerId, RandomId = new Random().Next() });
                 return;
             }

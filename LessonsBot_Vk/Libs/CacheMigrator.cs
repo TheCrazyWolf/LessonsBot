@@ -15,6 +15,11 @@ namespace LessonsBot_Vk.Libs
                 var groups = ApiSgk.GetGroups();
                 var teachers = ApiSgk.GetTeachers();
 
+                if (_ef.GroupsCache.Count() == groups.Count)
+                    return;
+                if (_ef.TeacherCaches.Count() == teachers.Count)
+                    return;
+
                 foreach (var item in groups)
                 {
 

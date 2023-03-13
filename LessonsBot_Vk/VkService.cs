@@ -118,27 +118,69 @@ namespace LessonsBot_Vk
                     break;
 
                 Thread.Sleep(_bot.TimeOutResponce);
-                //if (DateTime.Now.Hour >= 22 || DateTime.Now.Hour <= 10)
-                //    continue;
+                if (DateTime.Now.Hour >= 22 || DateTime.Now.Hour <= 10)
+                    continue;
 
                 foreach (var item in _bot.PeerProps)
                 {
+                    SLogger.Write($"[{_bot.IdBot}] Выполняется задача #{item.IdPeerProp} с типом {item.TypeLesson} для беседы {item.IdPeer} со значением {item.Value}");
                     try
                     {
+                       /* Новое расписание */
+                        var responce = ApiSgk
+                            .GetLessons(item.TypeLesson, DateTime.Now.AddDays(1), item.Value);
+
+                        /* Хеш расписания чтобы сравнить менялось ли оно */
+                        string md5 = responce.GetMD5();
+
+                        /* Если не изменилось пропускаем */
+                        if (item.LastResult == md5)
+                        {
+                            SLogger.Write($"[{_bot.IdBot}] #{item.IdPeerProp} расписание не изменилось! Пропускаем");
+                            continue;
+                        }
+
+                        /* Составляем строчку! */
+                        string message = "";
+
+                        switch (item.TypeLesson)
+                        {
+                            case TypeLesson.Group:
+                                message = $"Расписание на {responce.date} для группы {_db.GroupsCache
+                                    .FirstOrDefault(x => x.Id.ToString() == item.Value).Name}\n";
+                                break;
+                            case TypeLesson.Teacher:
+                                message = $"Расписание на {responce.date} для преподавателя {_db.TeacherCaches
+                                    .FirstOrDefault(x => x.id.ToString() == item.Value).name}\n";
+                                break;
+                            case TypeLesson.Cabinet:
+                                message = $"Расписание на {responce.date} для кабинета {item.Value}\n";
+                                break;
+                        }
 
 
-                        //string date_next_hash = LessonsHash.Calculate(date_next);
+                        string lessons_builder = responce.BuilderString();
 
-                        //if (date_next_hash == item.LastResult)
-                        //    continue;
+                        /* Если пустые уроки нехрен отправлять! */
+                        if (string.IsNullOrEmpty(lessons_builder))
+                            continue;
 
-                        _vkApi.Messages.Send(new() { PeerId = item.IdPeer, Message = StringLessonBuilder
-                            .Builder(item, DateTime.Now.AddDays(0)), RandomId = new Random().Next() });
-                        //item.LastResult = date_next_hash;
+                        //SLogger.Write($"[{_bot.IdBot}] #{item.IdPeerProp} отправка в беседу {message + lessons_builder}");
+
+                        _vkApi.Messages.Send(new()
+                        {
+                            PeerId = item.IdPeer,
+                            Message = message + lessons_builder,
+                            RandomId = new Random().Next()
+                        });
+
+                        /* Назначаем полученный хеш чтобы в будущем сравнить! */
+                        item.LastResult = md5;
+
+                        _db.Update(item);
+                        _db.SaveChanges();
 
                         NotifyVkServicesProps?.Invoke();
-
-
 
                     }
                     catch (Exception ex)

@@ -28,13 +28,6 @@ internal class Program
                 AddBot();
         }
 
-        //var s = ApiSgk.GetLessons(TypeLesson.Teacher, new DateOnly(2023, 03, 13), 1468.ToString());
-        //SLogger.Write(s);
-
-        //foreach (dynamic item in s.lessons)
-        //{
-        //    SLogger.WriteDanger(item.title);
-        //}
     }
 
     private static void AddBot()
