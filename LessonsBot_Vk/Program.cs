@@ -1,23 +1,23 @@
 ﻿using LessonsBot_DB.ModelsDb;
-using LessonsBot_DB.ModelService;
 using LessonsBot_Vk;
 using LessonsBot_Vk.Libs;
 using Microsoft.EntityFrameworkCore;
 
 internal class Program
 {
-    static DbProvider _ef;
+    private static int _totalCount = 0;
+    private static List<Bot> _bots;
+
     private static void Main(string[] args)
     {
-        CacheMigrator.Migrate();
+        BootOn();
+        SLogger.Write($"Всего подключенных ботов: {_totalCount}");
 
-        _ef = new DbProvider();
-        
-        SLogger.Write($"Всего подключенных ботов: {_ef.Bots.Count()}");
-
-        foreach (var item in _ef.Bots.Include(x=> x.PeerProps))
+        /* Запуск ботов в потоке*/
+        foreach (var item in _bots)
         {
-            new Thread( () => new VkService(item, ref _ef).Start() ).Start();
+            
+            new Thread(() => new VkService(item)).Start();    
         }
 
         while (true)
@@ -29,6 +29,21 @@ internal class Program
 
     }
 
+
+
+    private static void BootOn()
+    {
+        SLogger.Debug = true;
+        SLogger.SaveLogs = true;
+
+        CacheMigrator.Migrate();
+
+        using (DbProvider _ef = new())
+        {
+            _totalCount = _ef.Bots.Count();
+            _bots = _ef.Bots.Include(x => x.PeerProps).ToList();
+        }
+    }
     private static void AddBot()
     {
         Console.WriteLine("Введите токен:");
@@ -47,7 +62,11 @@ internal class Program
             IdValueService = id,
         };
 
-        _ef.Add(bot);
-        _ef.SaveChanges();
+        using(DbProvider _ef = new DbProvider())
+        {
+            _ef.Add(bot);
+            _ef.SaveChanges();
+        };
+
     }
 }

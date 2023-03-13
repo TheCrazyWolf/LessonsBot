@@ -10,7 +10,6 @@ namespace LessonsBot_Vk
 {
     internal class VkService
     {
-        protected DbProvider _db;
 
         /* Текущий бот */
         protected Bot _bot;
@@ -28,10 +27,10 @@ namespace LessonsBot_Vk
         public delegate void _VkServiceHandler();
         public event _VkServiceHandler NotifyVkServicesProps;
 
-        public VkService(Bot bot, ref DbProvider db)
+        public VkService(Bot bot)
         {
             _bot = bot;
-            _db = db;
+            Start();
         }
 
         public void Start()
@@ -65,6 +64,7 @@ namespace LessonsBot_Vk
             _taskScheduler.Start();
         }
 
+        /* Слушаем LongPoll */
         protected void ThreadBootLongPoll()
         {
             SLogger.WriteWarning($"[{_bot.IdBot}] Подключаемся к LongPoll");
@@ -91,7 +91,7 @@ namespace LessonsBot_Vk
                     {
                         if (item.Message.Text[0] == '!')
                         {
-                            new SystemCommand(item.Instance, ref _vkApi, ref _db, ref _bot);
+                            new SystemCommand(item.Instance, ref _vkApi, ref _bot);
                             NotifyVkServicesProps?.Invoke();
                         }
                         else
@@ -111,6 +111,7 @@ namespace LessonsBot_Vk
             }
         }
 
+        /* Выполняем таски по расписанию */
         protected void ThreadTaskSheduler()
         {
             while (true)
@@ -118,9 +119,13 @@ namespace LessonsBot_Vk
                 if (IsDeadBot())
                     break;
 
-                _bot = _db.Bots.Include(x => x.PeerProps).FirstOrDefault(x => x.IdBot == _bot.IdBot);
+                /* Актуализируем бота по настройкам! */
+                _bot = new DbProvider().Bots.Include(x => x.PeerProps)
+                    .FirstOrDefault(x => x.IdBot == _bot.IdBot);
 
                 Thread.Sleep(_bot.TimeOutResponce);
+
+                /* Не долбить API ночью */
                 if (DateTime.Now.Hour >= 22 || DateTime.Now.Hour <= 10)
                     continue;
 
@@ -129,59 +134,48 @@ namespace LessonsBot_Vk
                     SLogger.Write($"[{_bot.IdBot}] Выполняется задача #{item.IdPeerProp} с типом {item.TypeLesson} для беседы {item.IdPeer} со значением {item.Value}");
                     try
                     {
-                       /* Новое расписание */
-                        var responce = ApiSgk
-                            .GetLessons(item.TypeLesson, DateTime.Now.AddDays(1), item.Value);
+                        /* Новое расписание */
+                        ApiLessons responce = null;
 
+                        /* Специальное расписание если пятница ? */
+                        if(DateTime.Now.DayOfWeek == DayOfWeek.Friday)
+                        {
+                            responce = ApiSgk
+                            .GetLessons(item.TypeLesson, DateTime.Now.AddDays(3), item.Value);
+                        }
+                        else /* Стандартное расписание на день вперед */
+                        {
+                            responce = ApiSgk
+                            .GetLessons(item.TypeLesson, DateTime.Now.AddDays(1), item.Value);
+                        }
+                        
                         /* Хеш расписания чтобы сравнить менялось ли оно */
                         string md5 = responce.GetMD5();
 
                         /* Если не изменилось пропускаем */
-                        //if (item.LastResult == md5)
-                        //{
-                        //    SLogger.Write($"[{_bot.IdBot}] #{item.IdPeerProp} расписание не изменилось! Пропускаем");
-                        //    continue;
-                        //}
-
-                        /* Составляем строчку! */
-                        //string message = "";
-
-                        //switch (item.TypeLesson)
-                        //{
-                        //    case TypeLesson.Group:
-                        //        message = $"Расписание на {responce.date} для группы {_db.GroupsCache
-                        //            .FirstOrDefault(x => x.Id.ToString() == item.Value).Name}\n";
-                        //        break;
-                        //    case TypeLesson.Teacher:
-                        //        message = $"Расписание на {responce.date} для преподавателя {_db.TeacherCaches
-                        //            .FirstOrDefault(x => x.id.ToString() == item.Value).name}\n";
-                        //        break;
-                        //    case TypeLesson.Cabinet:
-                        //        message = $"Расписание на {responce.date} для кабинета {item.Value}\n";
-                        //        break;
-                        //}
-
-
-                        string lessons_builder = responce.BuilderString();
-
-                        /* Если пустые уроки нехрен отправлять! */
-                        if (string.IsNullOrEmpty(lessons_builder))
+                        if (item.LastResult == md5)
+                        {
+                            SLogger.Write($"[{_bot.IdBot}] #{item.IdPeerProp} расписание не изменилось! Пропускаем");
                             continue;
+                        }
 
                         //SLogger.Write($"[{_bot.IdBot}] #{item.IdPeerProp} отправка в беседу {message + lessons_builder}");
 
                         _vkApi.Messages.Send(new()
                         {
                             PeerId = item.IdPeer,
-                            Message = lessons_builder,
+                            Message = responce.BuilderString(),
                             RandomId = new Random().Next()
                         });
 
                         /* Назначаем полученный хеш чтобы в будущем сравнить! */
                         item.LastResult = md5;
 
-                        _db.Update(item);
-                        _db.SaveChanges();
+                        using (DbProvider _ef = new DbProvider())
+                        {
+                            _ef.Update(item);
+                            _ef.SaveChanges();
+                        }
 
                         NotifyVkServicesProps?.Invoke();
 
@@ -195,7 +189,6 @@ namespace LessonsBot_Vk
 
             }
         }
-
 
         /* Проверка живой ли бот */
         protected bool IsDeadBot()
@@ -212,11 +205,14 @@ namespace LessonsBot_Vk
 
         protected void VkService_NotifyVkServicesProps()
         {
-            SLogger.Write($"[{_bot.IdBot}] Сохранение изменений");
+            SLogger.Write($"[{_bot.IdBot}] Обновление параметров");
             try
             {
-                _db.Update(_bot);
-                _db.SaveChanges();
+                using(DbProvider _ef = new DbProvider())
+                {
+                    _ef.Update(_bot);
+                    _ef.SaveChanges();
+                }
             }
             catch (Exception ex)
             {

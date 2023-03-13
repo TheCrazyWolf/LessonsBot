@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using VkNet;
 using VkNet.Model;
@@ -17,13 +18,13 @@ namespace LessonsBot_Vk.Commands
         Bot _bot;
         Message _message;
         DbProvider _db;
+        string[] msg_array;
 
-        public SystemCommand(IGroupUpdate item, ref VkApi vkApi, 
-            ref DbProvider db, ref Bot bot)
+        public SystemCommand(IGroupUpdate item, ref VkApi vkApi, ref Bot bot)
         {
             _message = (Message) item;
             _api = vkApi;
-            _db = db;
+            _db = new DbProvider();
             _bot = bot;
 
             SLogger.Write($"-----------------------------------");
@@ -33,7 +34,8 @@ namespace LessonsBot_Vk.Commands
             SLogger.Write($"Содержимое: {_message.Text}");
 
 
-            string[] msg_array = _message.Text.Split(' ');
+            msg_array = new Regex("\\[.*\\][\\s,]*").Replace(_message.Text.ToLower(), "").Split(" ");
+
 
             switch (msg_array[0].ToLower())
             {
@@ -43,6 +45,9 @@ namespace LessonsBot_Vk.Commands
                     Help();
                     break;
                 case "!привязать":
+                case "!подписаться":
+                case "!подписать":
+                case "!подписка":
                     Bind();
                     break;
                 case "!очистка":
@@ -73,9 +78,9 @@ namespace LessonsBot_Vk.Commands
                 return;
             }
 
-            /* ЗАМЕНИТЬ КЕШИРОВАНИЕМ!! */
             var find_teachers = _db.TeacherCaches.ToList()
                 .FirstOrDefault(x => x.id == msg_array[1] || x.name.ToLower() == msg_array[1].ToLower());
+
             var find_groupropa = _db.GroupsCache.ToList()
                 .FirstOrDefault(x => x.Id.ToString() == msg_array[1] || x.Name.ToLower() == msg_array[1].ToLower());
 

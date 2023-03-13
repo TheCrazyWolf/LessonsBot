@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace LessonsBot_DB.ModelService
 {
@@ -8,7 +9,17 @@ namespace LessonsBot_DB.ModelService
     public class ApiTeacher
     {
         public string id { get; set; }
-        public string name { get; set; }
+
+        private string _name;
+        public string name
+        {
+            get => _name;
+            set
+            {
+                _name = Regex.Replace(value, @"\s+", " ");
+            }
+        }
     }
+
 
 }
