@@ -1,6 +1,7 @@
 ﻿using LessonsBot_DB.ModelsDb;
 using LessonsBot_DB.ModelService;
 using LessonsBot_Vk;
+using LessonsBot_Vk.Libs;
 using Microsoft.EntityFrameworkCore;
 
 internal class Program
@@ -10,6 +11,8 @@ internal class Program
     {
         _ef = new DbProvider();
         _ef.Database.Migrate();
+
+        CacheMigrator.Migrate();
 
         SLogger.Write($"Всего подключенных ботов: {_ef.Bots.Count()}");
 

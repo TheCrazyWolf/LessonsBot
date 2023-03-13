@@ -73,9 +73,9 @@ namespace LessonsBot_Vk.Commands
             }
 
             /* ЗАМЕНИТЬ КЕШИРОВАНИЕМ!! */
-            ApiTeacher find_teachers = ApiSgk.GetTeachers()
+            var find_teachers = _db.TeacherCaches.ToList()
                 .FirstOrDefault(x => x.id == msg_array[1] || x.name.ToLower() == msg_array[1].ToLower());
-            ApiGroups find_groupropa = ApiSgk.GetGroups()
+            var find_groupropa = _db.GroupsCache.ToList()
                 .FirstOrDefault(x => x.Id.ToString() == msg_array[1] || x.Name.ToLower() == msg_array[1].ToLower());
 
             if (find_groupropa == null)

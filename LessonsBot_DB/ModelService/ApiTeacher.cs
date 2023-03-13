@@ -1,4 +1,7 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+
 namespace LessonsBot_DB.ModelService
 {
     [Serializable]
@@ -6,5 +9,11 @@ namespace LessonsBot_DB.ModelService
     {
         public string id { get; set; }
         public string name { get; set; }
+    }
+
+    [Serializable]
+    public class ApiTeacherCache : ApiTeacher
+    {
+
     }
 }

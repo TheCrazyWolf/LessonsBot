@@ -12,27 +12,40 @@ namespace LessonsBot_Vk.Commands
 {
     internal class StringLessonBuilder
     {
-        public static string Builder(ref PeerProp prop, DateTime date)
+        public static string Builder(PeerProp prop, DateTime date)
         {
+            PeerProp _prop = new DbProvider().PeerProps
+                .FirstOrDefault(x => x.IdPeerProp == prop.IdPeerProp);
+            if (prop == null)
+                return "";
+
             string result = "";
+
             if(prop.TypeLesson == TypeLesson.Group)
             {
-                var date_next = ApiSgk.GetLessons(prop.TypeLesson, date, prop.Value);
+                var date_next = ApiSgk
+                    .GetLessons(prop.TypeLesson, date, prop.Value);
+                var group = new DbProvider().GroupsCache
+                    .FirstOrDefault(x => x.Id.ToString() == prop.Value);
 
-                result = $"Расписание на {date_next.date} \n";
+                if (date_next.lessons.Count == 0)
+                    return "";
 
-                if (date.DayOfWeek == DayOfWeek.Monday && date_next.lessons.Count != 0)
+                result = $"Расписание на {date_next.date} для группы {group.Name}\n";
+
+                if (date.DayOfWeek == DayOfWeek.Monday)
+                    result += $"\n8.25 \nКлассный час \n{FioMiniWork(date_next.lessons[0].teachername)} \n{date_next.lessons[0].cab}\n";
+                
+                foreach (var item2 in date_next.lessons)
                 {
-                    if (date_next.lessons[0].num == "1")
-                        result += $"0. 8.25 Классный час (Разговоры о важном) {FioMiniWork(date_next.lessons[0].teachername)} {date_next.lessons[0].cab}";
-
-                    foreach (var item2 in date_next.lessons)
-                    {
-                        result += $"\n{item2.num}. {item2.title} {FioMiniWork(item2.teachername)} {item2.cab}";
-                    }
-
+                    result += $"\n{item2.num}. \n{item2.title} \n{FioMiniWork(item2.teachername)} \n{item2.cab}\n";
                 }
             }
+
+
+            new DbProvider().Update(prop);
+            new DbProvider().SaveChanges();
+
             return result;
         }
 

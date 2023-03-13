@@ -118,8 +118,8 @@ namespace LessonsBot_Vk
                     break;
 
                 Thread.Sleep(_bot.TimeOutResponce);
-                if (DateTime.Now.Hour >= 22 || DateTime.Now.Hour <= 10)
-                    continue;
+                //if (DateTime.Now.Hour >= 22 || DateTime.Now.Hour <= 10)
+                //    continue;
 
                 foreach (var item in _bot.PeerProps)
                 {
@@ -132,7 +132,8 @@ namespace LessonsBot_Vk
                         //if (date_next_hash == item.LastResult)
                         //    continue;
 
-                        _vkApi.Messages.Send(new() { PeerId = item.IdPeer, Message = StringLessonBuilder.Builder(item, DateTime.Now.AddDays(1)), RandomId = new Random().Next() });
+                        _vkApi.Messages.Send(new() { PeerId = item.IdPeer, Message = StringLessonBuilder
+                            .Builder(item, DateTime.Now.AddDays(0)), RandomId = new Random().Next() });
                         //item.LastResult = date_next_hash;
 
                         NotifyVkServicesProps?.Invoke();
