@@ -1,8 +1,11 @@
 ﻿
-using System.Threading;
-
 public class SLogger
 {
+
+    /* Логирование да? нет?*/
+
+    /* Пишем в файл Да, нет*/
+
     public static bool Debug = true;
     public static bool SaveLogs = true;
 

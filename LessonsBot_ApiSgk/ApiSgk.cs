@@ -1,12 +1,16 @@
 ﻿using LessonsBot_DB.ModelService;
 using Newtonsoft.Json;
 using System.Net;
-using System.Text.Json;
-
 public class ApiSgk
 {
-    public static ApiLessons GetLessons(TypeLesson type, 
-        DateTime date, string id)
+    /// <summary>
+    /// Возращает коллекцию уроков за определенный день
+    /// </summary>
+    /// <param name="type">Тип запроса (группа, Преподаватель, Кабинет)</param>
+    /// <param name="date">Дата</param>
+    /// <param name="id">Номер группы/препода/кабинета</param>
+    /// <returns>ApiLessons </returns>
+    public static ApiLessons GetLessons(TypeLesson type, DateTime date, string id)
     {
         string json = "";
 
@@ -26,11 +30,25 @@ public class ApiSgk
         return JsonConvert.DeserializeObject<ApiLessons>(json);
     }
 
+    /// <summary>
+    /// Возращает список преподавателей
+    /// </summary>
+    /// <returns> List<ApiTeacher></returns>
     public static List<ApiTeacher> GetTeachers()
         => JsonConvert.DeserializeObject<List<ApiTeacher>>(Response("https://asu.samgk.ru/api/teachers"));
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public static List<ApiGroups> GetGroups()
         => JsonConvert.DeserializeObject<List<ApiGroups>>(Response("https://mfc.samgk.ru/api/groups"));
 
+    /// <summary>
+    /// Отправка запроса с настройка
+    /// </summary>
+    /// <param name="url">Передача API адреса</param>
+    /// <returns></returns>
     static string Response(string url)
     {
         try

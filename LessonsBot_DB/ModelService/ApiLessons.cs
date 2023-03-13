@@ -14,7 +14,7 @@ namespace LessonsBot_DB.ModelService
             lessons = new();
         }
 
-
+        /* */
         public string BuilderString()
         {
             if (lessons.Count == 0)
@@ -25,7 +25,7 @@ namespace LessonsBot_DB.ModelService
 
             DateTime dt = DateTime.Parse(date);
 
-            string result = "";
+            string result = $"Расписание на {date}";
 
             if (dt.DayOfWeek == DayOfWeek.Monday)
                 result += $"\n8.25 \nКлассный час \n{FioMiniWork(lessons[0].teachername)} \n{lessons[0].cab}\n";

@@ -11,16 +11,6 @@ public class DbProvider : DbContext
 
     private string _path = "data.db";
 
-    public DbProvider()
-    {
-
-    }
-
-    public DbProvider(string another_path)
-    {
-        _path = another_path;
-    }
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlite($"Data Source={_path}");

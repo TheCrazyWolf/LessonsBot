@@ -1,6 +1,7 @@
 ﻿using LessonsBot_DB.ModelsDb;
 using LessonsBot_DB.ModelService;
 using LessonsBot_Vk.Commands;
+using Microsoft.EntityFrameworkCore;
 using VkNet;
 using VkNet.Model;
 using VkNet.Model.RequestParams;
@@ -117,6 +118,8 @@ namespace LessonsBot_Vk
                 if (IsDeadBot())
                     break;
 
+                _bot = _db.Bots.Include(x => x.PeerProps).FirstOrDefault(x => x.IdBot == _bot.IdBot);
+
                 Thread.Sleep(_bot.TimeOutResponce);
                 if (DateTime.Now.Hour >= 22 || DateTime.Now.Hour <= 10)
                     continue;
@@ -134,29 +137,29 @@ namespace LessonsBot_Vk
                         string md5 = responce.GetMD5();
 
                         /* Если не изменилось пропускаем */
-                        if (item.LastResult == md5)
-                        {
-                            SLogger.Write($"[{_bot.IdBot}] #{item.IdPeerProp} расписание не изменилось! Пропускаем");
-                            continue;
-                        }
+                        //if (item.LastResult == md5)
+                        //{
+                        //    SLogger.Write($"[{_bot.IdBot}] #{item.IdPeerProp} расписание не изменилось! Пропускаем");
+                        //    continue;
+                        //}
 
                         /* Составляем строчку! */
-                        string message = "";
+                        //string message = "";
 
-                        switch (item.TypeLesson)
-                        {
-                            case TypeLesson.Group:
-                                message = $"Расписание на {responce.date} для группы {_db.GroupsCache
-                                    .FirstOrDefault(x => x.Id.ToString() == item.Value).Name}\n";
-                                break;
-                            case TypeLesson.Teacher:
-                                message = $"Расписание на {responce.date} для преподавателя {_db.TeacherCaches
-                                    .FirstOrDefault(x => x.id.ToString() == item.Value).name}\n";
-                                break;
-                            case TypeLesson.Cabinet:
-                                message = $"Расписание на {responce.date} для кабинета {item.Value}\n";
-                                break;
-                        }
+                        //switch (item.TypeLesson)
+                        //{
+                        //    case TypeLesson.Group:
+                        //        message = $"Расписание на {responce.date} для группы {_db.GroupsCache
+                        //            .FirstOrDefault(x => x.Id.ToString() == item.Value).Name}\n";
+                        //        break;
+                        //    case TypeLesson.Teacher:
+                        //        message = $"Расписание на {responce.date} для преподавателя {_db.TeacherCaches
+                        //            .FirstOrDefault(x => x.id.ToString() == item.Value).name}\n";
+                        //        break;
+                        //    case TypeLesson.Cabinet:
+                        //        message = $"Расписание на {responce.date} для кабинета {item.Value}\n";
+                        //        break;
+                        //}
 
 
                         string lessons_builder = responce.BuilderString();
@@ -207,7 +210,7 @@ namespace LessonsBot_Vk
             return false;
         }
 
-        private void VkService_NotifyVkServicesProps()
+        protected void VkService_NotifyVkServicesProps()
         {
             SLogger.Write($"[{_bot.IdBot}] Сохранение изменений");
             try

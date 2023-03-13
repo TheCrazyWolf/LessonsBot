@@ -10,7 +10,6 @@ internal class Program
     private static void Main(string[] args)
     {
         _ef = new DbProvider();
-        _ef.Database.Migrate();
 
         CacheMigrator.Migrate();
 

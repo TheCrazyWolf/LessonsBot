@@ -1,4 +1,5 @@
 ﻿using LessonsBot_DB.ModelService;
+using Microsoft.EntityFrameworkCore;
 
 namespace LessonsBot_Vk.Libs
 {
@@ -8,21 +9,20 @@ namespace LessonsBot_Vk.Libs
         public static void Migrate()
         {
             _ef = new DbProvider();
+            _ef.Database.Migrate();
 
             SLogger.WriteWarning("Стартует процесс кеширования данных");
+
             try
             {
                 var groups = ApiSgk.GetGroups();
                 var teachers = ApiSgk.GetTeachers();
 
-                if (_ef.GroupsCache.Count() == groups.Count)
-                    return;
-                if (_ef.TeacherCaches.Count() == teachers.Count)
+                if (_ef.GroupsCache.Count() == groups.Count && _ef.TeacherCaches.Count() == teachers.Count)
                     return;
 
                 foreach (var item in groups)
                 {
-
                     var find = _ef.GroupsCache.FirstOrDefault(x => x.Name == item.Name);
 
                     if (find != null)
