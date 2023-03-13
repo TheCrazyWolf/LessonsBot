@@ -173,7 +173,7 @@ namespace LessonsBot_Vk
                         _vkApi.Messages.Send(new()
                         {
                             PeerId = item.IdPeer,
-                            Message = message + lessons_builder,
+                            Message = lessons_builder,
                             RandomId = new Random().Next()
                         });
 
