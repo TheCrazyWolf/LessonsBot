@@ -13,8 +13,6 @@ internal class Program
     {
         BootOn();
 
-        //new TrainBot().Start();
-
         SLogger.Write($"Всего подключенных ботов: {_totalCount}");
 
         /* Запуск ботов в потоке*/
@@ -29,6 +27,9 @@ internal class Program
             string command = Console.ReadLine().ToLower();
             if (command == "add")
                 AddBot();
+
+            if (command == "train")
+                new TrainBot().Start();
         }
 
     }

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LessonsBot_DB.Migrations
 {
     [DbContext(typeof(DbProvider))]
-    [Migration("20230313103451_v5")]
-    partial class v5
+    [Migration("20230314093127_v1")]
+    partial class v1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,6 +67,25 @@ namespace LessonsBot_DB.Migrations
                     b.HasKey("IdBot");
 
                     b.ToTable("Bots");
+                });
+
+            modelBuilder.Entity("LessonsBot_DB.ModelsDb.Dicktionary", b =>
+                {
+                    b.Property<Guid>("IdDicktionary")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Answer")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Word")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("IdDicktionary");
+
+                    b.ToTable("Dicktionaries");
                 });
 
             modelBuilder.Entity("LessonsBot_DB.ModelsDb.PeerProp", b =>

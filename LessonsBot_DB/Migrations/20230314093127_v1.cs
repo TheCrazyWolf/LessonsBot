@@ -26,6 +26,44 @@ namespace LessonsBot_DB.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Dicktionaries",
+                columns: table => new
+                {
+                    IdDicktionary = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Word = table.Column<string>(type: "TEXT", nullable: false),
+                    Answer = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Dicktionaries", x => x.IdDicktionary);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GroupsCache",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GroupsCache", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TeacherCaches",
+                columns: table => new
+                {
+                    id = table.Column<string>(type: "TEXT", nullable: false),
+                    name = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TeacherCaches", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PeerProps",
                 columns: table => new
                 {
@@ -56,7 +94,16 @@ namespace LessonsBot_DB.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Dicktionaries");
+
+            migrationBuilder.DropTable(
+                name: "GroupsCache");
+
+            migrationBuilder.DropTable(
                 name: "PeerProps");
+
+            migrationBuilder.DropTable(
+                name: "TeacherCaches");
 
             migrationBuilder.DropTable(
                 name: "Bots");

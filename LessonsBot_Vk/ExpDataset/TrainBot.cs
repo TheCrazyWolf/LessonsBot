@@ -34,7 +34,7 @@ namespace LessonsBot_Vk.ExpDataset
                     Answer = word_ans[1]
                 };
 
-               // SLogger.Write($"{word_ans[0]} {word_ans[1]}");
+               SLogger.Write($"{word_ans[0]} {word_ans[1]}");
                 _ef.Add(dick);
                 _ef.SaveChanges();
             }
