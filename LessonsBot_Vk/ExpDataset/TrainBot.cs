@@ -1,4 +1,5 @@
 ﻿using LessonsBot_DB.ModelsDb;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,12 +43,28 @@ namespace LessonsBot_Vk.ExpDataset
         {
             DbProvider _ef = new();
 
-            var data = _ef.Dicktionaries.Where(t => t.Word.ToLower().StartsWith(input.ToLower())).ToList();
-            var sDOP = _ef.Dicktionaries.Where(t => t.Word.ToLower().Contains(input.ToLower())).ToList();
-            data.AddRange(sDOP);
-            var noDupes = data.Distinct().ToList();
 
-            return noDupes[new Random().Next(0, noDupes.Count())].Answer;
+            var word = _ef.Dicktionaries
+                .Where(x => EF.Functions.Like(x.Word.ToLower(), $"%{input.ToLower()}%")).ToList();
+
+
+            //var data = _ef.Dicktionaries.Where(t => t.Word.ToLower().StartsWith(input.ToLower())).ToList();
+            //var sDOP = _ef.Dicktionaries.Where(t => t.Word.ToLower().Contains(input.ToLower())).ToList();
+            //data.AddRange(sDOP);
+            //var noDupes = data.Distinct().ToList();
+
+
+            if (word.Count == 0)
+                return "Я тупой";
+
+            //if (word.Count >= 25)
+            //    return word[1].Answer;
+
+            //if (word.Count <= 24)
+                return word[new Random().Next(0, word.Count)].Answer;
+
+
+            //return "";
         }
     }
 }
