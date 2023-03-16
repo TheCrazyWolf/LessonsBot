@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LessonsBot_ApiSgk", "Lesson
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LessonsBot_Vk", "LessonsBot_Vk\LessonsBot_Vk.csproj", "{A33ED599-2769-4682-B969-D21CA5ADCE06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LessonsBot_OpenAI", "LessonsBot_OpenAI\LessonsBot_OpenAI.csproj", "{66FAC889-F383-40EA-B6A3-815DD5A4441C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LessonsBot_OpenAI", "LessonsBot_OpenAI\LessonsBot_OpenAI.csproj", "{66FAC889-F383-40EA-B6A3-815DD5A4441C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LessonBot_SBot", "LessonBot_SBot\LessonBot_SBot.csproj", "{C3B2F1DC-BAE4-43D3-B00E-4830235D92BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{66FAC889-F383-40EA-B6A3-815DD5A4441C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66FAC889-F383-40EA-B6A3-815DD5A4441C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66FAC889-F383-40EA-B6A3-815DD5A4441C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3B2F1DC-BAE4-43D3-B00E-4830235D92BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3B2F1DC-BAE4-43D3-B00E-4830235D92BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3B2F1DC-BAE4-43D3-B00E-4830235D92BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3B2F1DC-BAE4-43D3-B00E-4830235D92BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
